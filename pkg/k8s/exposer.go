@@ -21,7 +21,6 @@ import (
 var supportedSchemes = map[string]v12.Protocol{
 	"tcp": v12.ProtocolTCP,
 	"udp": v12.ProtocolUDP,
-	"grpc-web": v12.ProtocolTCP,
 }
 
 func ExposeAsService(namespace, name *string, tunnelPort int, scheme string, rawPorts []string, image string, Reuse bool, readyChan chan<- bool, nodeSelectorTags map[string]string, cert, key string, serviceType string, kubecontext *string) error {
@@ -42,7 +41,7 @@ func ExposeAsService(namespace, name *string, tunnelPort int, scheme string, raw
 		portname := fmt.Sprintf("%s-%d", scheme, parsed.Source)
 		ports[i] = v12.ServicePort{
 			Protocol: protocol,
-			Name:     portname,
+			Name:     `grpc-web` + portname,
 			Port:     parsed.Source,
 			TargetPort: intstr.IntOrString{
 				Type:   intstr.Int,
